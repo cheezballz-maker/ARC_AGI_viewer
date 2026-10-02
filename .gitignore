@@ -1,0 +1,8 @@
+__pycache__/
+*.py[cod]
+.venv/
+.uv-cache/
+Viewer/problem_annotations.json
+Viewer/example_labels.json
+Viewer/imports/
+*.tmp

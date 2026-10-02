@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="workspace-token" content="__SESSION_TOKEN__">
+  <title>ARC / Fieldnotes</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <header class="app-header">
+    <a class="brand" href="/" aria-label="ARC Fieldnotes home"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><strong>ARC <span>/</span> Fieldnotes</strong></a>
+    <div class="header-actions"><button id="import-files">Open JSON</button><button id="import-folder">Open folder</button></div>
+    <input id="file-input" type="file" accept=".json,application/json" multiple hidden>
+    <input id="folder-input" type="file" webkitdirectory multiple hidden>
+  </header>
+
+  <div class="workspace">
+    <aside class="library" id="library" aria-label="Problem library">
+      <div class="library-top"><h2>Problem library <span id="total-count"></span></h2>
+        <label class="search-box"><span aria-hidden="true">⌕</span><input id="search" placeholder="Search problems or notes…" aria-label="Search problems"><kbd>/</kbd></label>
+        <input id="status-filter" type="hidden" value="">
+        <input id="set-filter" type="hidden" value="">
+        <section class="library-section" aria-labelledby="review-heading"><h3 id="review-heading">Review status</h3><div id="status-counts" class="library-filters" role="group" aria-label="Filter by review status"></div></section>
+        <section class="library-section" aria-labelledby="sets-heading"><h3 id="sets-heading">Problem sets</h3><div id="set-counts" class="library-filters" role="group" aria-label="Filter by problem set"></div></section>
+        <p class="count-hint">Counts include all loaded problems.</p>
+        <details class="more-filters"><summary>More filters <span id="extra-count"></span></summary><div class="extra-filters"><label><input type="checkbox" id="star-filter"> Bookmarked</label><label><input type="checkbox" id="notes-filter"> Has notes</label><label class="filter-label">Grid dimensions<select id="shape-filter"><option value="">Any transformation</option><option>Same size</option><option>Changes size</option></select></label></div></details>
+      </div>
+      <div class="results-bar"><span id="result-count" role="status">Loading…</span><button id="reset-filters" class="text-button">Clear filters</button><select id="sort" aria-label="Sort problems"><option value="id">ID ↑</option><option value="recent">Recent first</option></select></div>
+      <div id="problem-list" class="problem-list" aria-label="Problems"></div>
+    </aside>
+
+    <div id="resize-library" class="panel-divider" role="separator" tabindex="0" aria-label="Resize problem library" aria-orientation="vertical" aria-controls="library" title="Drag to resize · Arrow keys to adjust · Double-click to reset"></div>
+    <main class="study" id="study">
+      <div id="empty-study" class="empty-study"><h1>Select a problem</h1></div>
+      <div id="problem-workspace" hidden>
+        <header class="problem-header"><div><div id="problem-sets" class="eyebrow"></div><div class="problem-title"><h1 id="problem-id"></h1><button id="bookmark" class="icon-button" title="Bookmark problem" aria-label="Bookmark problem" aria-pressed="false">☆</button></div><div id="problem-meta" class="problem-meta"></div></div><div class="problem-nav"><span id="position"></span><button id="previous" class="icon-button" aria-label="Previous problem" title="Previous problem (Alt+Left)">←</button><button id="next" class="icon-button" aria-label="Next problem" title="Next problem (Alt+Right)">→</button><button id="toggle-notebook" class="notebook-toggle">Notebook</button></div></header>
+        <div class="study-toolbar"><div class="tabs" role="tablist" aria-label="Examples"><button data-section="all" role="tab" aria-selected="true">All examples</button><button data-section="train" role="tab" aria-selected="false">Training</button><button data-section="test" role="tab" aria-selected="false">Test</button></div><div class="grid-tools"><label><input id="cell-values" type="checkbox"> Values</label></div></div>
+        <div id="examples" class="examples"></div>
+        <footer class="study-footer"><span id="cell-details"></span><span>Rows × columns</span></footer>
+      </div>
+    </main>
+
+    <div id="resize-notebook" class="panel-divider" role="separator" tabindex="0" aria-label="Resize problem notebook" aria-orientation="vertical" aria-controls="notebook" title="Drag to resize · Arrow keys to adjust · Double-click to reset"></div>
+    <aside class="notebook" id="notebook" aria-label="Problem notebook">
+      <div class="notebook-heading"><h2>Problem notebook</h2><button id="close-notebook" class="icon-button" aria-label="Close notebook">×</button></div>
+      <div id="notebook-empty" class="notebook-empty">No problem selected</div>
+      <div id="notebook-content" hidden>
+        <div class="notebook-scope"><strong id="notebook-id"></strong></div>
+        <section class="note-section notebook-field"><label class="section-label" for="review-status">Review status</label><select id="review-status"><option>Reviewed</option><option selected>Awaiting Review</option><option>Uncertain</option></select></section>
+        <fieldset class="note-section notebook-field notebook-pair">
+          <legend class="section-label">Background</legend>
+          <div class="notebook-columns">
+            <div><label class="notebook-side-label" for="field-input_background">Input</label><textarea id="field-input_background" data-notebook-field="input_background" rows="3" maxlength="20000" spellcheck="true"></textarea></div>
+            <div><label class="notebook-side-label" for="field-output_background">Output</label><textarea id="field-output_background" data-notebook-field="output_background" rows="3" maxlength="20000" spellcheck="true"></textarea></div>
+          </div>
+        </fieldset>
+        <fieldset class="note-section notebook-field notebook-pair">
+          <legend class="section-label">Objects</legend>
+          <div class="notebook-columns">
+            <div><label class="notebook-side-label" for="field-input_objects">Input</label><textarea id="field-input_objects" data-notebook-field="input_objects" rows="3" maxlength="20000" spellcheck="true"></textarea></div>
+            <div><label class="notebook-side-label" for="field-output_objects">Output</label><textarea id="field-output_objects" data-notebook-field="output_objects" rows="3" maxlength="20000" spellcheck="true"></textarea></div>
+          </div>
+        </fieldset>
+        <fieldset class="note-section notebook-field notebook-pair">
+          <legend class="section-label">Object relationships</legend>
+          <div class="notebook-columns">
+            <div><label class="notebook-side-label" for="field-input_object_relationships">Input</label><textarea id="field-input_object_relationships" data-notebook-field="input_object_relationships" rows="3" maxlength="20000" spellcheck="true"></textarea></div>
+            <div><label class="notebook-side-label" for="field-output_object_relationships">Output</label><textarea id="field-output_object_relationships" data-notebook-field="output_object_relationships" rows="3" maxlength="20000" spellcheck="true"></textarea></div>
+          </div>
+        </fieldset>
+        <section class="note-section notebook-field"><label class="section-label" for="field-transformations">Transformations</label><textarea id="field-transformations" data-notebook-field="transformations" rows="3" maxlength="20000" spellcheck="true"></textarea></section>
+        <section class="note-section notebook-field"><label class="section-label" for="field-strategy">Strategy</label><textarea id="field-strategy" data-notebook-field="strategy" rows="3" maxlength="20000" spellcheck="true"></textarea></section>
+        <div class="notebook-save"><span id="save-state" role="status">Saved</span><button id="save-notes" class="text-button">Save notebook</button></div>
+      </div>
+      <div class="notebook-footer"><button id="export-problem" class="text-button">Export problem JSON</button><button id="export-notes" class="text-button">Export all notebooks</button></div>
+    </aside>
+  </div>
+  <div id="notification" class="notification" role="status" hidden></div>
+  <dialog id="error-dialog"><h2 id="error-title">Error</h2><p id="error-message"></p><button id="dismiss-error" class="primary">Close</button></dialog>
+</body>
+</html>
